@@ -1,0 +1,5 @@
+.vagrant
+.env
+__pycache__
+data_*
+venv
