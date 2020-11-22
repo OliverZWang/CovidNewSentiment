@@ -27,7 +27,7 @@ Methods:
 
 Example:
 
-    a = [-1, -1, 0, 0, 1, 1]
+    a = [-0.98, -0.4, -0.3, 0.2, 0.45, 0.88]
     b = [-1, -1, -1, 0, 0, 1]   
     metrics = AccuracyMetrics(a, b)
     print(metrics.positive_f1)
