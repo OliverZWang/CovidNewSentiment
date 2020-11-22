@@ -3,7 +3,7 @@ from scipy.stats import spearmanr
 import numpy as np
 
 '''
-A Accuracy Matrix that evaluates the accuracy of a prediction based on spearman correlation, f1 scores, and r-sqaured
+A Accuracy Metrics that evaluates the accuracy of a prediction based on spearman correlation, f1 scores, and r-sqaured
 
 Arguments:
 
@@ -29,16 +29,16 @@ Example:
 
     a = [-1, -1, 0, 0, 1, 1]
     b = [-1, -1, -1, 0, 0, 1]   
-    matrix = AccuracyMatrix(a, b)
-    print(matrix.positive_f1)
+    metrics = AccuracyMetrics(a, b)
+    print(metrics.positive_f1)
 
-    acc_dict = matrix.result_dict()
+    acc_dict = metrics.result_dict()
     print(acc_dict['r_squared'])
 
 
 '''
 
-class AccuracyMatrix():
+class AccuracyMetrics():
 
     
 
@@ -63,7 +63,7 @@ class AccuracyMatrix():
 
     def result_dict(self):
 
-        accuracy_matrix = {
+        accuracy_metrics = {
             "spearman_correlation": self.correlation,
             "spearman_pval": self.pval,
             "negative_f1": self.negative_f1,
@@ -71,7 +71,7 @@ class AccuracyMatrix():
             "positive_f1": self.positive_f1,
             "r_squared": self.r_squared
         }
-        return accuracy_matrix
+        return accuracy_metrics
 
     def map_predictions(self, predictions):
         for itr in range(len(predictions)):
