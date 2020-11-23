@@ -1,5 +1,5 @@
 import pandas as pd
-from scipy.stats import spearmanr
+# from scipy.stats import spearmanr
 import numpy as np
 
 '''
@@ -15,7 +15,7 @@ Arguments:
 Attributes:
 
     correlation:                spearman rho correlation
-    p_val:                      spearman p value
+    (EXCLUDED)p_val:            spearman p value
     negative_f1:                f1 score for the negative class
     neutral_f1:                 f1 score for the neutral class
     positive_f1:                f1 score for the positive class
@@ -53,7 +53,7 @@ class AccuracyMetrics():
         self.neutral_upper = neutral_upper
 
         self.map_predictions(self.predictions)
-        self.correlation, self.pval = spearmanr(self.predictions, self.gold_labels)
+        self.correlation = self.compute_spearman()
 
         self.negative_f1 = self.compute_f1(-1)
         self.neutral_f1 = self.compute_f1(0)
@@ -64,8 +64,8 @@ class AccuracyMetrics():
     def result_dict(self):
 
         accuracy_metrics = {
-            "spearman_correlation": self.correlation,
-            "spearman_pval": self.pval,
+            "correlation": self.correlation,
+            # "spearman_pval": self.pval,
             "negative_f1": self.negative_f1,
             "neutral_f1": self.neutral_f1,
             "positive_f1": self.positive_f1,
@@ -82,8 +82,15 @@ class AccuracyMetrics():
             else:
                 predictions[itr] = 1
 
-
     def compute_spearman(self):
+        df_list = []
+        for i in range(len(self.predictions)):
+            df_list.append([self.predictions[i], self.gold_labels[i]])
+        df = pd.DataFrame(df_list, columns=['predictions', 'gold_labels'])
+        return df.corr(method='spearman').iloc[0, 1]
+
+
+    def compute_spearman_pure_python(self):
         observation_length = len(self.predictions)
         diff_sqr_sum = 0
         for i in range(observation_length):
