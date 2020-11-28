@@ -6,11 +6,13 @@ import re
 import statistics
 
 '''
-A model that computes the VADER sentiment scores of an article both as a long String and by sentence
+A model that computes the VADER sentiment scores of an article both as a long String and by sentence, 
+which also allows updates of certain words' Vader scores
 
 Arguments:
 
     article:                The content of an article as a String
+    new_words(optional):    A dictionary with updated scores for words
     
 
 Attributes:
@@ -29,7 +31,8 @@ Methods:
 Example:
 
     article = "FDA Delays Emergency Vaccine Approval Until They Finish Evaluating New Bagged Salad Kit. Clarifying that the federal agency would take a look at Pfizer’s submission eventually, the FDA announced Friday that it would delay the emergency coronavirus vaccine approval until they were finished evaluating a bagged salad kit. "
-    article_scores = SentimentScores(article)
+    new_words = {'negative': 2}
+    article_scores = SentimentScores(article, new_words=new_words)
     print(article_scores.compound_by_article)
 
     score_dict = article_scores.result_dict()
@@ -42,9 +45,13 @@ Example:
 
 class SentimentScores():
 
-    def __init__(self, article):
+    def __init__(self, article, *args, **kwargs):
         self.article = article
         self.sid = SentimentIntensityAnalyzer()
+
+        if 'new_words' in kwargs.keys():
+            self.sid.lexicon.update(kwargs['new_words'])
+
         self.scores_by_article = self.sid.polarity_scores(article)
         self.compound_by_article = self.scores_by_article['compound']
 
@@ -80,7 +87,6 @@ class SentimentScores():
         for sentence in sentences:
             scores.append(self.sid.polarity_scores(sentence)['compound'])
         return scores
-
 
 
 
