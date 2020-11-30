@@ -57,7 +57,7 @@ def find_opt_metrics(predictions, gold_labels):
     # opt_lower = -0.75
     # opt_upper = 0.75
     max_f1 = 0 
-
+    opt_metrics = None
     for lower in np.arange(-1, 1, 0.05):
         for upper in np.arange(1, lower, -0.05):
             metrics = AccuracyMetrics(predictions, gold_labels, neutral_upper=upper, neutral_lower=lower)
@@ -65,8 +65,9 @@ def find_opt_metrics(predictions, gold_labels):
                 # opt_lower = lower
                 # opt_upper = upper
                 max_f1 = metrics.macro_f1
+                opt_metrics = metrics
     
-    return metrics
+    return opt_metrics
 
 '''
     Input: A list of SentimentScores objects; a list of gold labels
