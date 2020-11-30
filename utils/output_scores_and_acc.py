@@ -134,7 +134,7 @@ def get_articles(ids, gold_labels):
 
 def write_article_scores(valid_ids, scores_objects):
 
-    with open("article_scores.csv", mode="w") as csv_file:
+    with open("../results/article_scores.csv", mode="w") as csv_file:
 
         score_writer = csv.writer(csv_file, delimiter=",", quotechar='"')
         score_writer.writerow(['RECORDID']+ list(scores_objects[0].result_dict().keys()))
@@ -144,7 +144,7 @@ def write_article_scores(valid_ids, scores_objects):
 
 def write_opt_acc_metrics(accuracy_metrics_dict):
 
-    with open('accuracy_metrics.csv', mode='w') as csv_file:
+    with open('../results/accuracy_metrics.csv', mode='w') as csv_file:
         accuracy_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
         accuracy_writer.writerow(['aggregation_method'] + list(accuracy_metrics_dict['compound_by_article'].result_dict().keys()))
 
