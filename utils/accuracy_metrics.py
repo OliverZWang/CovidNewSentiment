@@ -19,6 +19,7 @@ Attributes:
     negative_f1:                f1 score for the negative class
     neutral_f1:                 f1 score for the neutral class
     positive_f1:                f1 score for the positive class
+    macro_f1:                   macro f1 score for the prediction
     r_squared:                  r-squared for the predictions
 
 Methods:
@@ -59,6 +60,8 @@ class AccuracyMetrics():
         self.neutral_f1 = self.compute_f1(0)
         self.positive_f1 = self.compute_f1(1)
 
+        self.macro_f1 = (self.negative_f1 + self.neutral_f1 + self.positive_f1) / 3
+
         self.r_squared = self.compute_r_squared()
 
     def result_dict(self):
@@ -69,7 +72,8 @@ class AccuracyMetrics():
             "negative_f1": self.negative_f1,
             "neutral_f1": self.neutral_f1,
             "positive_f1": self.positive_f1,
-            "r_squared": self.r_squared
+            "r_squared": self.r_squared,
+            "macro_f1": self.macro_f1
         }
         return accuracy_metrics
 
@@ -124,7 +128,7 @@ class AccuracyMetrics():
         precision = self.compute_precision(f_class)
         recall = self.compute_recall(f_class)
 
-        return (2 * precision * recall) / (precision + recall)
+        return (2.0 * precision * recall) / (precision + recall)
 
     def compute_r_squared(self):
         correlation_matrix = np.corrcoef(self.predictions, self.gold_labels)
