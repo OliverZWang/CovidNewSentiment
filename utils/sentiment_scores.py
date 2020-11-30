@@ -71,7 +71,7 @@ class SentimentScores():
         
     def result_dict(self):
         sentiment_scores = {
-            "scores_by_article": self.scores_by_article,
+            # "scores_by_article": self.scores_by_article,
             "compound_by_article": self.compound_by_article,
             "average_sentence": self.average_sentence,
             "median_sentence": self.median_sentence,

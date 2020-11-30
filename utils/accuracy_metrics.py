@@ -112,6 +112,9 @@ class AccuracyMetrics():
                 tp += 1
             elif self.predictions[i] == p_class and self.gold_labels[i] != p_class:
                 fp += 1
+        if tp + fp == 0:
+            return 0
+
         return tp/(tp+fp)
 
     def compute_recall(self, r_class):
@@ -122,12 +125,17 @@ class AccuracyMetrics():
                 tp += 1
             elif self.predictions[i] != r_class and self.gold_labels[i] == r_class:
                 fn += 1
+        if tp + fn == 0:
+            return 0
         return tp/(tp+fn)
 
     def compute_f1(self, f_class):
         precision = self.compute_precision(f_class)
         recall = self.compute_recall(f_class)
 
+        if precision + recall == 0: 
+            return 0
+            
         return (2.0 * precision * recall) / (precision + recall)
 
     def compute_r_squared(self):
