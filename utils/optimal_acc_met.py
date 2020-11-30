@@ -152,6 +152,7 @@ def write_opt_acc_metrics(accuracy_metrics_dict):
             accuracy_writer.writerow([key] + list(accuracy_metrics_dict[key].result_dict().values()))
 
 if __name__ == "__main__":
+    
     ids, gold_labels =  read_labels('../labeled_news/news_labeled.xlsx')
     valid_ids, valid_labels, articles = get_articles(ids, gold_labels)
     scores_objects = compute_article_sentiment(articles)
