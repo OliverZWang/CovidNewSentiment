@@ -58,8 +58,8 @@ def find_opt_metrics(predictions, gold_labels):
     # opt_upper = 0.75
     max_f1 = 0 
 
-    for lower in np.arange(-0.75, 0.75, 0.05):
-        for upper in np.arange(0.75, lower, -0.05):
+    for lower in np.arange(-1, 1, 0.05):
+        for upper in np.arange(1, lower, -0.05):
             metrics = AccuracyMetrics(predictions, gold_labels, neutral_upper=upper, neutral_lower=lower)
             if metrics.macro_f1 > max_f1:
                 # opt_lower = lower
@@ -132,24 +132,25 @@ def get_articles(ids, gold_labels):
 
     return valid_ids, valid_labels, articles
 
-def write_article_scores(valid_ids, scores_objects):
+def write_article_scores(valid_ids, gold_labels, scores_objects):
 
     with open("../results/article_scores.csv", mode="w") as csv_file:
 
         score_writer = csv.writer(csv_file, delimiter=",", quotechar='"')
-        score_writer.writerow(['RECORDID']+ list(scores_objects[0].result_dict().keys()))
+        score_writer.writerow(['RECORDID', 'gold_labels']+ list(scores_objects[0].result_dict().keys()))
 
         for itr in range(len(scores_objects)):
-            score_writer.writerow([valid_ids[itr]] + list(scores_objects[itr].result_dict().values()))
+            score_writer.writerow([valid_ids[itr], str(gold_labels[itr])] + list(scores_objects[itr].result_dict().values()))
 
 def write_opt_acc_metrics(accuracy_metrics_dict):
 
     with open('../results/accuracy_metrics.csv', mode='w') as csv_file:
         accuracy_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
-        accuracy_writer.writerow(['aggregation_method'] + list(accuracy_metrics_dict['compound_by_article'].result_dict().keys()))
+        accuracy_writer.writerow(['aggregation_method'] + list(accuracy_metrics_dict['compound_by_article'].result_dict().keys()) + ['neutral_lower', 'neutral_upper'])
 
         for key in accuracy_metrics_dict.keys():
-            accuracy_writer.writerow([key] + list(accuracy_metrics_dict[key].result_dict().values()))
+            this_met = accuracy_metrics_dict[key]
+            accuracy_writer.writerow([key] + list(this_met.result_dict().values()) + [str(this_met.neutral_lower), str(this_met.neutral_upper)])
 
 if __name__ == "__main__":
     
@@ -157,7 +158,9 @@ if __name__ == "__main__":
     valid_ids, valid_labels, articles = get_articles(ids, gold_labels)
     scores_objects = compute_article_sentiment(articles)
 
-    write_article_scores(valid_ids, scores_objects)
+    write_article_scores(valid_ids, valid_labels, scores_objects)
 
     accuracy_metrics_dict = compute_opt_accuracy_metrics(scores_objects, valid_labels)
     write_opt_acc_metrics(accuracy_metrics_dict)
+
+    # print(accuracy_metrics_dict['average_sentence'].neutral_lower, accuracy_metrics_dict['average_sentence'].neutral_upper)
