@@ -7,7 +7,7 @@ import statistics
 
 '''
 A model that computes the VADER sentiment scores of an article both as a long String and by sentence, 
-which also allows updates of certain words' Vader scores
+which also allows updates of certain words' Vader scores. 
 
 Arguments:
 
@@ -41,7 +41,7 @@ Example:
 
 '''
 
-
+NEW_WORDS = {"crisis": 0, "positive": -1, "great": 0, "authority": -2, "Crisis": 0, "Positive": -1, "Great": 0, "Authority": -2, "coronavirus": -1, "pandemic": 0.5, "outbreak": -1.5, "virus": -1, "lockdown": -1, "trump": -1.5, "Coronavirus": -1, "Pandemic": 0.5, "Outbreak": -1.5, "Virus": -1, "Lockdown": -1, "Trump": -1.5, "TRUMP": -1.5}
 
 class SentimentScores():
 
@@ -51,6 +51,8 @@ class SentimentScores():
 
         if 'new_words' in kwargs.keys():
             self.sid.lexicon.update(kwargs['new_words'])
+        else:
+            self.sid.lexicon.update(NEW_WORDS)
 
         self.scores_by_article = self.sid.polarity_scores(article)
         self.compound_by_article = self.scores_by_article['compound']
@@ -61,6 +63,12 @@ class SentimentScores():
         self.mode_sentence = statistics.mode(self.scores_by_sentence)
         self.pstd_sentence = statistics.pstdev(self.scores_by_sentence)
 
+        self.scores_by_paragraph = self.compute_paragraph_scores()
+        self.average_paragraph = statistics.mean(self.scores_by_paragraph)
+        self.median_paragraph = statistics.median(self.scores_by_paragraph)
+        self.mode_paragraph = statistics.mode(self.scores_by_paragraph)
+        self.pstd_paragraph = statistics.pstdev(self.scores_by_paragraph)
+        
     def result_dict(self):
         sentiment_scores = {
             "scores_by_article": self.scores_by_article,
@@ -68,7 +76,11 @@ class SentimentScores():
             "average_sentence": self.average_sentence,
             "median_sentence": self.median_sentence,
             "mode_sentence": self.mode_sentence,
-            "pstd_sentence": self.pstd_sentence
+            "pstd_sentence": self.pstd_sentence,
+            "average_paragraph": self.average_paragraph,
+            "median_paragraph": self.median_paragraph,
+            "mode_paragraph": self.mode_paragraph,
+            "pstd_paragraph": self.pstd_paragraph
         }
         return sentiment_scores
 
@@ -88,9 +100,19 @@ class SentimentScores():
             scores.append(self.sid.polarity_scores(sentence)['compound'])
         return scores
 
+    def get_paragraphs(self, article):
+        article = str(article)
+        article = article.replace('\xa0', '\n')
+        paragraphs = re.split('\n', article)
+        paragraphs = [paragraph.replace('\\', '') for paragraph in paragraphs]
+        return paragraphs
 
-
-
+    def compute_paragraph_scores(self):
+        paragraphs = self.get_paragraphs(self.article)
+        scores = []
+        for paragraph in paragraphs:
+            scores.append(self.sid.polarity_scores(paragraph)['compound'])
+        return scores
 
 
 
