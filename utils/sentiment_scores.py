@@ -17,12 +17,13 @@ Arguments:
 
 Attributes:
 
-    scores_by_article: A dictionary of VADER scores with keys of 'neg', 'neu', 'pos', and 'compound'
-    compound_by_article: The compound score value of the previous attribute (scores_by_article)
-    average_sentence: The average of the sentiment scores of all sentences
-    median_sentence: The median of the sentiment scores of all sentences
-    mode_sentence: The mode of the sentiment scores of all sentences
-    pstd_sentence: The population standard deviation of the sentiment scores of all sentences
+    scores_by_article:      A dictionary of VADER scores with keys of 'neg', 'neu', 'pos', and 'compound'
+    compound_by_article:    The compound score value of the previous attribute (scores_by_article)
+    average_sentence:       The average of the sentiment scores of all sentences
+    median_sentence:        The median of the sentiment scores of all sentences
+    mode_sentence:          The mode of the sentiment scores of all sentences
+    pstd_sentence:          The population standard deviation of the sentiment scores of all sentences
+    avg_first_last_para: The average of scores of the first and last paragraph
 
 Methods:
 
@@ -68,6 +69,8 @@ class SentimentScores():
         self.median_paragraph = statistics.median(self.scores_by_paragraph)
         self.mode_paragraph = statistics.mode(self.scores_by_paragraph)
         self.pstd_paragraph = statistics.pstdev(self.scores_by_paragraph)
+
+        self.avg_first_last_para = self.scores_by_paragraph[0] + self.scores_by_paragraph[-1]
         
     def result_dict(self):
         sentiment_scores = {
@@ -80,7 +83,8 @@ class SentimentScores():
             "average_paragraph": self.average_paragraph,
             "median_paragraph": self.median_paragraph,
             "mode_paragraph": self.mode_paragraph,
-            "pstd_paragraph": self.pstd_paragraph
+            "pstd_paragraph": self.pstd_paragraph,
+            "avg_first_last_para": self.avg_first_last_para
         }
         return sentiment_scores
 

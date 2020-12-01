@@ -7,24 +7,7 @@ import csv
 import numpy as np
 
 
-'''
-
-input a list of articles
-
-1. iterate through boundaries
-2. create SentimentScores obj for each, store in list
-3. compute macro f1 for the specified aggregation methods
-4. compute the optimal boundaries
-
-lower starts from -0.75
-upper starts from 0.75
-
-return optimal lower, upper boundaries and macro f1
-
-'''
-
-
-SCORE_TYPES = ['compound_by_article', 'average_sentence', 'median_sentence', 'mode_sentence', 'average_paragraph', 'median_paragraph', 'mode_paragraph']
+SCORE_TYPES = ['compound_by_article', 'average_sentence', 'median_sentence', 'mode_sentence', 'average_paragraph', 'median_paragraph', 'mode_paragraph', 'avg_first_last_para']
 
 '''
     Input: a list of articles
