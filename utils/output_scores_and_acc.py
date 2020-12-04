@@ -13,10 +13,10 @@ SCORE_TYPES = ['compound_by_article', 'average_sentence', 'median_sentence', 'mo
     Input: a list of articles
     Output: a list of SentimentScores objects for the input articles
 '''
-def compute_article_sentiment(articles):
+def compute_article_sentiment(articles, new_words='default'):
     scores_objects = []
     for article in articles:
-        article_scores = SentimentScores(article)
+        article_scores = SentimentScores(article, new_words=new_words)
         scores_objects.append(article_scores)
     return scores_objects
 
@@ -116,9 +116,9 @@ def get_articles_by_id(ids, gold_labels):
 
     return valid_ids, valid_labels, articles
 
-def write_article_scores(valid_ids, gold_labels, scores_objects):
+def write_article_scores(valid_ids, gold_labels, scores_objects, path):
 
-    with open("../results/article_scores.csv", mode="w") as csv_file:
+    with open(path, mode="w") as csv_file:
 
         score_writer = csv.writer(csv_file, delimiter=",", quotechar='"')
         score_writer.writerow(['RECORDID', 'gold_labels']+ list(scores_objects[0].result_dict().keys()))
@@ -126,9 +126,9 @@ def write_article_scores(valid_ids, gold_labels, scores_objects):
         for itr in range(len(scores_objects)):
             score_writer.writerow([valid_ids[itr], str(gold_labels[itr])] + list(scores_objects[itr].result_dict().values()))
 
-def write_opt_acc_metrics(accuracy_metrics_dict):
+def write_opt_acc_metrics(accuracy_metrics_dict, path):
 
-    with open('../results/accuracy_metrics.csv', mode='w') as csv_file:
+    with open(path, mode='w') as csv_file:
         accuracy_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
         accuracy_writer.writerow(['aggregation_method'] + list(accuracy_metrics_dict['compound_by_article'].result_dict().keys()) + ['neutral_lower', 'neutral_upper'])
 
@@ -142,9 +142,9 @@ if __name__ == "__main__":
     valid_ids, valid_labels, articles = get_articles_by_id(ids, gold_labels)
     scores_objects = compute_article_sentiment(articles)
 
-    write_article_scores(valid_ids, valid_labels, scores_objects)
+    write_article_scores(valid_ids, valid_labels, scores_objects, "../results/article_scores.csv")
 
     accuracy_metrics_dict = compute_opt_accuracy_metrics(scores_objects, valid_labels)
-    write_opt_acc_metrics(accuracy_metrics_dict)
+    write_opt_acc_metrics(accuracy_metrics_dict, "../results/accuracy_metrics.csv")
 
     # print(accuracy_metrics_dict['average_sentence'].neutral_lower, accuracy_metrics_dict['average_sentence'].neutral_upper)
