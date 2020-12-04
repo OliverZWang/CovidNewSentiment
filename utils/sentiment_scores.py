@@ -51,9 +51,20 @@ class SentimentScores():
         self.sid = SentimentIntensityAnalyzer()
 
         if 'new_words' in kwargs.keys():
-            self.sid.lexicon.update(kwargs['new_words'])
+            if kwargs['new_words'] == 'default':
+                print('USING DEFAULT REPLACEMENT')
+                self.sid.lexicon.update(NEW_WORDS)
+            elif kwargs['new_words'] != 'None':
+                print('USING CUSTOM REPLACEMENT')
+                self.sid.lexicon.update(kwargs['new_words'])
+            # else:
+                # print('NO MODIFICATION!')
         else:
+            print('NO KWARGS: USING DEFAULT REPLACEMENT ')
             self.sid.lexicon.update(NEW_WORDS)
+            
+        
+            
 
         self.scores_by_article = self.sid.polarity_scores(article)
         self.compound_by_article = self.scores_by_article['compound']
