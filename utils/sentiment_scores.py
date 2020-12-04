@@ -52,36 +52,39 @@ class SentimentScores():
 
         if 'new_words' in kwargs.keys():
             if kwargs['new_words'] == 'default':
-                print('USING DEFAULT REPLACEMENT')
+                # print('USING DEFAULT REPLACEMENT')
                 self.sid.lexicon.update(NEW_WORDS)
             elif kwargs['new_words'] != 'None':
-                print('USING CUSTOM REPLACEMENT')
+                # print('USING CUSTOM REPLACEMENT')
                 self.sid.lexicon.update(kwargs['new_words'])
             # else:
                 # print('NO MODIFICATION!')
         else:
-            print('NO KWARGS: USING DEFAULT REPLACEMENT ')
+            # print('NO KWARGS: USING DEFAULT REPLACEMENT ')
             self.sid.lexicon.update(NEW_WORDS)
-            
         
-            
+        if 'methods' in kwargs.keys() and kwargs['method'] == 'average_paragraph':
+            self.scores_by_paragraph = self.compute_paragraph_scores()
+            self.average_paragraph = statistics.mean(self.scores_by_paragraph)
+        
+        else:
 
-        self.scores_by_article = self.sid.polarity_scores(article)
-        self.compound_by_article = self.scores_by_article['compound']
+            self.scores_by_article = self.sid.polarity_scores(article)
+            self.compound_by_article = self.scores_by_article['compound']
 
-        self.scores_by_sentence = self.compute_sentence_scores()
-        self.average_sentence = statistics.mean(self.scores_by_sentence)
-        self.median_sentence = statistics.median(self.scores_by_sentence)
-        self.mode_sentence = statistics.mode(self.scores_by_sentence)
-        self.pstd_sentence = statistics.pstdev(self.scores_by_sentence)
+            self.scores_by_sentence = self.compute_sentence_scores()
+            self.average_sentence = statistics.mean(self.scores_by_sentence)
+            self.median_sentence = statistics.median(self.scores_by_sentence)
+            self.mode_sentence = statistics.mode(self.scores_by_sentence)
+            self.pstd_sentence = statistics.pstdev(self.scores_by_sentence)
 
-        self.scores_by_paragraph = self.compute_paragraph_scores()
-        self.average_paragraph = statistics.mean(self.scores_by_paragraph)
-        self.median_paragraph = statistics.median(self.scores_by_paragraph)
-        self.mode_paragraph = statistics.mode(self.scores_by_paragraph)
-        self.pstd_paragraph = statistics.pstdev(self.scores_by_paragraph)
+            self.scores_by_paragraph = self.compute_paragraph_scores()
+            self.average_paragraph = statistics.mean(self.scores_by_paragraph)
+            self.median_paragraph = statistics.median(self.scores_by_paragraph)
+            self.mode_paragraph = statistics.mode(self.scores_by_paragraph)
+            self.pstd_paragraph = statistics.pstdev(self.scores_by_paragraph)
 
-        self.avg_first_last_para = self.scores_by_paragraph[0] + self.scores_by_paragraph[-1]
+            self.avg_first_last_para = self.scores_by_paragraph[0] + self.scores_by_paragraph[-1]
         
     def result_dict(self):
         sentiment_scores = {
