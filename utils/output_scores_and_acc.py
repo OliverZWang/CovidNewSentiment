@@ -13,10 +13,10 @@ SCORE_TYPES = ['compound_by_article', 'average_sentence', 'median_sentence', 'mo
     Input: a list of articles
     Output: a list of SentimentScores objects for the input articles
 '''
-def compute_article_sentiment(articles, new_words='default'):
+def compute_article_sentiment(articles, new_words='default', method='default'):
     scores_objects = []
     for article in articles:
-        article_scores = SentimentScores(article, new_words=new_words)
+        article_scores = SentimentScores(article, new_words=new_words, method=method)
         scores_objects.append(article_scores)
     return scores_objects
 
