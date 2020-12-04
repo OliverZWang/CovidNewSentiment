@@ -35,14 +35,14 @@ def get_score_by_method(scores_objects, score_type):
     Output: a AccuracyMetrics object using the optimal boundaries
 
 '''
-def find_opt_metrics(predictions, gold_labels):
+def find_opt_metrics(predictions, gold_labels, lower_bound=-1, upper_bound=1, step=0.05):
     
     # opt_lower = -0.75
     # opt_upper = 0.75
     max_f1 = 0 
     opt_metrics = None
-    for lower in np.arange(-1, 1, 0.05):
-        for upper in np.arange(1, lower, -0.05):
+    for lower in np.arange(lower_bound, upper_bound, step):
+        for upper in np.arange(upper_bound, lower, step*-1):
             metrics = AccuracyMetrics(predictions, gold_labels, neutral_upper=upper, neutral_lower=lower)
             if metrics.macro_f1 > max_f1:
                 # opt_lower = lower
@@ -88,7 +88,7 @@ def read_labels(filename):
     Input: a list of RECORDIDs, a list of gold labels
     Output: a list of labels, and a list of gold labels for articles that have valid bodies; a list of articles
 '''
-def get_articles(ids, gold_labels):
+def get_articles_by_id(ids, gold_labels):
 
     connection = pymysql.connect(host="nlp2590.ckdech7dwvqp.us-east-1.rds.amazonaws.com",
     port=3310,
@@ -139,7 +139,7 @@ def write_opt_acc_metrics(accuracy_metrics_dict):
 if __name__ == "__main__":
     
     ids, gold_labels =  read_labels('../labeled_news/news_labeled.xlsx')
-    valid_ids, valid_labels, articles = get_articles(ids, gold_labels)
+    valid_ids, valid_labels, articles = get_articles_by_id(ids, gold_labels)
     scores_objects = compute_article_sentiment(articles)
 
     write_article_scores(valid_ids, valid_labels, scores_objects)
