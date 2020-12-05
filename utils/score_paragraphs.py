@@ -12,7 +12,10 @@ if __name__ == "__main__":
         paragraphs = obj.get_paragraphs(obj.article)
         for index in range(len(obj.scores_by_paragraph)):
             if obj.scores_by_paragraph[index] != 0:
-                output.append({paragraphs[index]: obj.scores_by_paragraph[index]})
-    with open('../results/paragraph_scores.json', 'w') as outfile:
+                if obj.scores_by_paragraph[index] >= 0:
+                    output.append({paragraphs[index]: 1})
+                else:
+                    output.append({paragraphs[index]: -1})
+    with open('../results/paragraph_scores_binary.json', 'w') as outfile:
         json.dump(output, outfile)
 
