@@ -41,6 +41,53 @@ Example:
 
 
 '''
+update_dict = {
+    # existing
+    "crisis": 0,
+    "positive": -2,
+    "great": 0,
+    "authority": -2,
+    "death": -1,
+    "die": -1.5,
+    "bad": -1,
+    "fear": -1.5,
+    "unemployment": -0.5,
+    "emergency": 0,
+    "fight": 1,
+    "stop": 0.5,
+    "loser": -0.5,
+    "restriction": -0.5,
+    "risk": 0,
+    "cut": 0,
+    "low":0,
+    "number": -1,
+    "care": -0.5,
+    "increase": -0.5,
+    "united": -0.5,
+
+    
+    "Crisis": 0,
+    "Positive": -1.5,
+    # "Great": 0,
+    # "Authority": -2,
+    
+    # new
+    "coronavirus": -1,
+    "pandemic": 0.5,
+    "outbreak": -1.5,
+    "virus": -1,
+    "lockdown": -1,
+    "trump": -1.5,
+    
+    "Coronavirus": -1,
+    "Pandemic": 0.5,
+    "Outbreak": -1.5,
+    "Virus": -1,
+    "Lockdown": -1,
+    "Trump": -1.5,
+    "TRUMP": -1.5,
+    "covid19": -1
+}
 
 NEW_WORDS = {"crisis": 0, "positive": -1, "great": 0, "authority": -2, "Crisis": 0, "Positive": -1, "Great": 0, "Authority": -2, "coronavirus": -1, "pandemic": 0.5, "outbreak": -1.5, "virus": -1, "lockdown": -1, "trump": -1.5, "Coronavirus": -1, "Pandemic": 0.5, "Outbreak": -1.5, "Virus": -1, "Lockdown": -1, "Trump": -1.5, "TRUMP": -1.5}
 
@@ -53,7 +100,7 @@ class SentimentScores():
         if 'new_words' in kwargs.keys():
             if kwargs['new_words'] == 'default':
                 # print('USING DEFAULT REPLACEMENT')
-                self.sid.lexicon.update(NEW_WORDS)
+                self.sid.lexicon.update(update_dict)
             elif kwargs['new_words'] != 'None':
                 # print('USING CUSTOM REPLACEMENT')
                 self.sid.lexicon.update(kwargs['new_words'])
@@ -61,7 +108,7 @@ class SentimentScores():
                 # print('NO MODIFICATION!')
         else:
             # print('NO KWARGS: USING DEFAULT REPLACEMENT ')
-            self.sid.lexicon.update(NEW_WORDS)
+            self.sid.lexicon.update(update_dict)
         
         if 'methods' in kwargs.keys() and kwargs['method'] == 'average_paragraph':
             self.scores_by_paragraph = self.compute_paragraph_scores()
