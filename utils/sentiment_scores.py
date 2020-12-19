@@ -110,9 +110,9 @@ class SentimentScores():
             # print('NO KWARGS: USING DEFAULT REPLACEMENT ')
             self.sid.lexicon.update(update_dict)
         
-        if 'methods' in kwargs.keys() and kwargs['method'] == 'average_paragraph':
-            self.scores_by_paragraph = self.compute_paragraph_scores()
-            self.average_paragraph = statistics.mean(self.scores_by_paragraph)
+        if 'methods' in kwargs.keys() and kwargs['method'] == 'average_sentence':
+            self.scores_by_sentence = self.compute_sentence_scores()
+            self.average_sentence = statistics.mean(self.scores_by_sentence)
         
         else:
 

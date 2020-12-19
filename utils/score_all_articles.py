@@ -95,10 +95,10 @@ def write_to_csv(valid_ids, dates, sentiment_scores, predictions, path):
     df.to_csv(path, mode='a', index=False, header=False)
     print('finished writing csv')
 
-def get_paragraph_average(scores_objects):
+def get_sentence_average(scores_objects):
     sentiment_scores = []
     for obj in scores_objects:
-        sentiment_scores.append(obj.average_paragraph)
+        sentiment_scores.append(obj.average_sentence)
     return sentiment_scores
 
 def split_to_chunks(lst, n):
@@ -111,12 +111,12 @@ if __name__ == "__main__":
     # print('starting to score articles')
     # start_time = time.time()
     program_start = time.time()
-    drop_if_exists_sql = 'drop table if exists vader_time_series; '
-    create_table_sql = 'create table vader_time_series(RECORDID INt, DATE DATE, sentiment_scores FLOAT, predictions INT);'
+    # drop_if_exists_sql = 'drop table if exists vader_time_series; '
+    # create_table_sql = 'create table vader_time_series(RECORDID INt, DATE DATE, sentiment_scores FLOAT, predictions INT);'
 
 
-    execute_sql(drop_if_exists_sql)
-    execute_sql(create_table_sql)
+    # execute_sql(drop_if_exists_sql)
+    # execute_sql(create_table_sql)
 
     valid_ids_chunks = list(split_to_chunks(valid_ids, 1000))
     articles_chunks = list(split_to_chunks(articles, 1000))
@@ -130,16 +130,16 @@ if __name__ == "__main__":
         dates = dates_chunks[chunk_index]
 
         start_time = time.time()
-        scores_objects = compute_article_sentiment(articles, new_words='default', method='average_paragraph')
+        scores_objects = compute_article_sentiment(articles, new_words='default', method='average_sentence')
     # print("--- %s seconds ---" % (time.time() - start_time))
     # print('finished scoring articles')
 
 
     
-        sentiment_scores = get_paragraph_average(scores_objects)
+        sentiment_scores = get_sentence_average(scores_objects)
         predictions = map_predictions(sentiment_scores, 0, 0.15)
 
-        upload_time_series(valid_ids, dates, sentiment_scores, predictions)
+        # upload_time_series(valid_ids, dates, sentiment_scores, predictions)
         write_to_csv(valid_ids, dates, sentiment_scores, predictions, '../results/all_article_vader.csv')
 
         print(f'Finished chunk {chunk_index}/{len(valid_ids_chunks)}. Time: {time.time() - start_time}')

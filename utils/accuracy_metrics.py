@@ -66,6 +66,8 @@ class AccuracyMetrics():
 
         self.r_squared = self.compute_r_squared()
 
+        self.accuracy = self.compute_accuracy()
+
     def count_class(self):
 
         positive_count = 0
@@ -87,6 +89,7 @@ class AccuracyMetrics():
         accuracy_metrics = {
             "correlation": self.correlation,
             # "spearman_pval": self.pval,
+            "accuracy": self.accuracy,
             "negative_f1": self.negative_f1,
             "neutral_f1": self.neutral_f1,
             "positive_f1": self.positive_f1,
@@ -135,6 +138,12 @@ class AccuracyMetrics():
 
         return tp/(tp+fp)
 
+    def compute_accuracy(self):
+        t = 0.0
+        for i in range(len(self.predictions)):
+            if self.predictions[i] == self.gold_labels[i]:
+                t += 1
+        return t/len(self.predictions)
     def compute_recall(self, r_class):
         tp = 0.0
         fn = 0
