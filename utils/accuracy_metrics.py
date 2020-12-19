@@ -62,7 +62,7 @@ class AccuracyMetrics():
 
         self.positive_count, self.neutral_count, self.negative_count = self.count_class()
 
-        self.macro_f1 = self.negative_f1 * (self.negative_count/len(self.gold_labels)) + self.neutral_f1 * (self.negative_count/len(self.gold_labels)) + self.positive_f1 * (self.positive_count/len(self.gold_labels))
+        self.macro_f1 = self.negative_f1 * (self.negative_count/len(self.gold_labels)) + self.neutral_f1 * (self.neutral_count/len(self.gold_labels)) + self.positive_f1 * (self.positive_count/len(self.gold_labels))
 
         self.r_squared = self.compute_r_squared()
 

@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
     
         sentiment_scores = get_paragraph_average(scores_objects)
-        predictions = map_predictions(sentiment_scores, 0, 1.5)
+        predictions = map_predictions(sentiment_scores, 0, 0.15)
 
         upload_time_series(valid_ids, dates, sentiment_scores, predictions)
         write_to_csv(valid_ids, dates, sentiment_scores, predictions, '../results/all_article_vader.csv')
